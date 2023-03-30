@@ -2,7 +2,7 @@ import java.io.*;
 import java.util.*;
 
 public class JsonOperations {
-    private Map<String, String> categories;
+    private Map<String, String> categories = new HashMap<>();
     private Map<String, Integer> sumCategories = new HashMap<>();
     private String category;
 
@@ -26,8 +26,7 @@ public class JsonOperations {
         }
     }
 
-    public void createCategoryMap(JsonFromClient jsonFromClient) {
-        categories = new HashMap<>();
+    public Map<String, String> createCategoryMap() {
         try (BufferedReader bufferedReader = new BufferedReader(new FileReader("./categories.tsv"))) {
             String[] words;
             String line;
@@ -38,9 +37,10 @@ public class JsonOperations {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+        return categories;
     }
 
-    public void sumCalculation(JsonFromClient jsonFromClient) {
+    public Map<String, Integer> sumCalculation(JsonFromClient jsonFromClient) {
         if (categories.get(jsonFromClient.getTitle()) == null) {
             category = "другое";
         } else {
@@ -54,6 +54,7 @@ public class JsonOperations {
             int number = sum + jsonFromClient.getSum();
             sumCategories.put(category, number);
         }
+        return  sumCategories;
     }
 
     public Root findingMax() {
