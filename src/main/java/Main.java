@@ -24,7 +24,7 @@ public class Main {
                 ) {
                     String request = in.readLine();
                     JsonFromClient jsonFromClient = mapper.readValue(request, JsonFromClient.class);
-                    jsonOperations.createCategoryMap(jsonFromClient);
+                    jsonOperations.createCategoryMap();
                     jsonOperations.sumCalculation(jsonFromClient);
                     Root root = jsonOperations.findingMax();
                     String answer = mapper.writeValueAsString(root);
