@@ -1,7 +1,7 @@
 import java.io.*;
 import java.util.*;
 
-public class JsonOperations {
+public class JsonOperations implements Serializable {
     private Map<String, String> categories = new HashMap<>();
     private Map<String, Integer> sumCategories = new HashMap<>();
     private String category;
@@ -54,7 +54,7 @@ public class JsonOperations {
             int number = sum + jsonFromClient.getSum();
             sumCategories.put(category, number);
         }
-        return  sumCategories;
+        return sumCategories;
     }
 
     public Root findingMax() {
@@ -69,5 +69,42 @@ public class JsonOperations {
         root.setMaxCategory(maxCategory);
 
         return root;
+    }
+
+    public void saveBin(File binFile) {
+        categories = getCategories();
+        sumCategories = getSumCategories();
+        category = getCategory();
+
+        try (FileOutputStream fileOutputStream = new FileOutputStream(binFile);
+             ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream)) {
+            objectOutputStream.writeObject(this);
+            objectOutputStream.flush();
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
+    static JsonOperations loadFromBinFile(File binFile) {
+        JsonOperations jsonOperations = null;
+        try (FileInputStream fileInputStream = new FileInputStream(binFile);
+             ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream)) {
+            jsonOperations = (JsonOperations) objectInputStream.readObject();
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+        return jsonOperations;
+    }
+
+    public Map<String, String> getCategories() {
+        return categories;
+    }
+
+    public Map<String, Integer> getSumCategories() {
+        return sumCategories;
+    }
+
+    public String getCategory() {
+        return category;
     }
 }
